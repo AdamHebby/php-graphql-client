@@ -13,7 +13,7 @@ very simple one.
 ## FORK CHANGES
  - Removed Client Functionality
    - This is now purely a GraphQL Query Generator
- - Public for class properties
+ - Public getters for important class properties
    - Query
      - getOperationName
      - getFieldName
