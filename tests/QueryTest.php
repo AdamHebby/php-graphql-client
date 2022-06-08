@@ -48,7 +48,8 @@ class QueryTest extends TestCase
 
     /**
      * @covers \GraphQL\Query::__toString
-     * @covers FieldTrait::constructSelectionSet
+     * @covers \GraphQL\Query::getFieldName
+     * @covers \GraphQL\FieldTrait::constructSelectionSet
      */
     public function testQueryWithoutFieldName()
     {
@@ -79,6 +80,8 @@ two
 }",
             (string) $query
         );
+
+        $this->assertEmpty($query->getFieldName());
     }
 
     /**
@@ -86,6 +89,7 @@ two
      *
      * @covers \GraphQL\Query::generateSignature
      * @covers \GraphQL\Query::__toString
+     * @covers \GraphQL\Query::getAlias
      */
     public function testQueryWithAlias()
     {
@@ -102,6 +106,8 @@ one
 }",
             (string) $query
         );
+
+        $this->assertEquals('ObjectAlias', $query->getAlias());
     }
 
     /**
@@ -110,6 +116,7 @@ one
      * @covers \GraphQL\Query::setAlias
      * @covers \GraphQL\Query::generateSignature
      * @covers \GraphQL\Query::__toString
+     * @covers \GraphQL\Query::getAlias
      */
     public function testQueryWithSetAlias()
     {
@@ -127,6 +134,8 @@ one
 }",
             (string) $query
         );
+
+        $this->assertEquals('ObjectAlias', $query->getAlias());
     }
 
     /**
@@ -134,6 +143,7 @@ one
      *
      * @covers \GraphQL\Query::generateSignature
      * @covers \GraphQL\Query::setOperationName
+     * @covers \GraphQL\Query::getOperationName
      * @covers \GraphQL\Query::__toString
      */
     public function testQueryWithOperationName()
@@ -146,6 +156,8 @@ Object
 }',
             (string) $query
         );
+
+        $this->assertEquals('retrieveObject', $query->getOperationName());
     }
 
     /**
@@ -154,6 +166,7 @@ Object
      *
      * @covers \GraphQL\Query::generateSignature
      * @covers \GraphQL\Query::setOperationName
+     * @covers \GraphQL\Query::getOperationName
      * @covers \GraphQL\Query::__toString
      */
     public function testQueryWithOperationNameAndOperationType()
@@ -167,6 +180,8 @@ Object
 }',
             (string) $query
         );
+
+        $this->assertEquals('retrieveObject', $query->getOperationName());
     }
 
     /**
@@ -174,6 +189,7 @@ Object
      *
      * @covers \GraphQL\Query::generateSignature
      * @covers \GraphQL\Query::setOperationName
+     * @covers \GraphQL\Query::getOperationName
      * @covers \GraphQL\Query::__toString
      */
     public function testQueryWithOperationNameInSecondLevelDoesNothing()
@@ -189,6 +205,8 @@ Nested
 }',
             (string) $query
         );
+
+        $this->assertEquals('retrieveObject', $query->getOperationName());
     }
 
     /**
@@ -205,6 +223,7 @@ Nested
      * @depends testConvertsToString
      *
      * @covers \GraphQL\Query::setVariables
+     * @covers \GraphQL\Query::getVariables
      * @covers \GraphQL\Query::generateSignature
      * @covers \GraphQL\Query::constructVariables
      * @covers \GraphQL\Query::__toString
@@ -219,12 +238,15 @@ Object
 }',
             (string) $query
         );
+
+        $this->assertEquals([new Variable('var', 'String')], $query->getVariables());
     }
 
     /**
      * @depends testQueryWithOneVariable
      *
      * @covers \GraphQL\Query::setVariables
+     * @covers \GraphQL\Query::getVariables
      * @covers \GraphQL\Query::generateSignature
      * @covers \GraphQL\Query::constructVariables
      * @covers \GraphQL\Query::__toString
@@ -239,12 +261,18 @@ Object
 }',
             (string) $query
         );
+
+        $this->assertEquals(
+            [new Variable('var', 'String'), new Variable('intVar', 'Int', false, 4)],
+            $query->getVariables()
+        );
     }
 
     /**
      * @depends testConvertsToString
      *
      * @covers \GraphQL\Query::__toString
+     * @covers \GraphQL\Query::getVariables
      */
     public function testQueryWithVariablesInSecondLevelDoesNothing()
     {
@@ -260,6 +288,11 @@ Nested
 }',
             (string) $query
         );
+
+        $this->assertEquals(
+            [new Variable('var', 'String'), new Variable('intVar', 'Int', false, 4)],
+            $query->getVariables()
+        );
     }
 
     /**
@@ -267,6 +300,8 @@ Nested
      * @depends testQueryWithOperationName
      *
      * @covers \GraphQL\Query::generateSignature
+     * @covers \GraphQL\Query::getOperationName
+     * @covers \GraphQL\Query::getVariables
      * @covers \GraphQL\Query::__toString
      */
     public function testQueryWithOperationNameAndVariables()
@@ -280,6 +315,9 @@ Object
 }',
             (string) $query
         );
+
+        $this->assertEquals('retrieveObject', $query->getOperationName());
+        $this->assertEquals([new Variable('var', 'String')], $query->getVariables());
     }
 
     /**
@@ -326,6 +364,7 @@ Object
      * @depends clone testEmptyArguments
      *
      * @covers \GraphQL\Query::setArguments
+     * @covers \GraphQL\Query::getArguments
      * @covers \GraphQL\Query::constructArguments
      *
      * @param Query $query
@@ -343,6 +382,8 @@ Object(arg1: \"value\")
             'Query has improperly formatted parameter list'
         );
 
+        $this->assertEquals(['arg1' => 'value'], $query->getArguments());
+
         return $query;
     }
 
@@ -350,6 +391,7 @@ Object(arg1: \"value\")
      * @depends clone testEmptyArguments
      *
      * @covers \GraphQL\Query::setArguments
+     * @covers \GraphQL\Query::getArguments
      * @covers \GraphQL\Query::constructArguments
      *
      * @param Query $query
@@ -366,6 +408,8 @@ Object(arg1: 23)
             (string) $query
         );
 
+        $this->assertEquals(['arg1' => 23], $query->getArguments());
+
         return $query;
     }
 
@@ -373,6 +417,7 @@ Object(arg1: 23)
      * @depends clone testEmptyArguments
 
      * @covers \GraphQL\Query::setArguments
+     * @covers \GraphQL\Query::getArguments
      * @covers \GraphQL\Query::constructArguments
      *
      * @param Query $query
@@ -389,6 +434,8 @@ Object(arg1: true)
             (string) $query
         );
 
+        $this->assertEquals(['arg1' => true], $query->getArguments());
+
         return $query;
     }
 
@@ -396,6 +443,7 @@ Object(arg1: true)
      * @depends clone testEmptyArguments
      *
      * @covers  \GraphQL\Query::setArguments
+     * @covers  \GraphQL\Query::getArguments
      * @covers  \GraphQL\Query::constructArguments
      *
      * @param Query $query
@@ -412,6 +460,8 @@ Object(arg1: null)
             , (string) $query
         );
 
+        $this->assertEquals(['arg1' => null], $query->getArguments());
+
         return $query;
     }
 
@@ -419,6 +469,7 @@ Object(arg1: null)
      * @depends clone testEmptyArguments
      *
      * @covers \GraphQL\Query::setArguments
+     * @covers \GraphQL\Query::getArguments
      * @covers \GraphQL\Query::constructArguments
      *
      * @param  Query $query
@@ -435,6 +486,8 @@ Object(arg1: [1, 2, 3])
             (string) $query
         );
 
+        $this->assertEquals(['arg1' => [1, 2, 3]], $query->getArguments());
+
         return $query;
     }
 
@@ -442,6 +495,7 @@ Object(arg1: [1, 2, 3])
      * @depends clone testEmptyArguments
      *
      * @covers  \GraphQL\Query::setArguments
+     * @covers  \GraphQL\Query::getArguments
      * @covers  \GraphQL\Query::constructArguments
      * @covers  \GraphQL\RawObject::__toString
      *
@@ -459,6 +513,11 @@ Object(obj: {json_string_array: [\"json value\"]})
             , (string) $query
         );
 
+        $this->assertEquals(
+            ['obj' => new RawObject('{json_string_array: ["json value"]}')],
+            $query->getArguments()
+        );
+
         return $query;
     }
 
@@ -466,6 +525,7 @@ Object(obj: {json_string_array: [\"json value\"]})
      * @depends clone testEmptyArguments
      *
      * @covers \GraphQL\Query::setArguments
+     * @covers \GraphQL\Query::getArguments
      * @covers \GraphQL\Query::constructArguments
      *
      * @param  Query $query
@@ -482,6 +542,11 @@ Object(arg1: [\"one\", \"two\", \"three\"])
             (string) $query
         );
 
+        $this->assertEquals(
+            ['arg1' => ['one', 'two', 'three']],
+            $query->getArguments()
+        );
+
         return $query;
     }
 
@@ -491,6 +556,7 @@ Object(arg1: [\"one\", \"two\", \"three\"])
      * @depends testBooleanArgumentValue
      *
      * @covers \GraphQL\Query::setArguments
+     * @covers \GraphQL\Query::getArguments
      * @covers \GraphQL\Query::constructArguments
      *
      * @param Query $query
@@ -508,14 +574,17 @@ Object(arg1: \"val1\" arg2: 2 arg3: true)
             'Query has improperly formatted parameter list'
         );
 
+        $this->assertEquals(
+            ['arg1' => 'val1', 'arg2' => 2, 'arg3' => true],
+            $query->getArguments()
+        );
+
         return $query;
     }
 
     /**
      * @depends testStringArgumentValue
      *
-     * @covers \GraphQL\Query::setArguments
-     * @covers \GraphQL\Query::constructArguments
      * @covers \GraphQL\Query::setArguments
      * @covers \GraphQL\Query::constructArguments
      */
@@ -536,6 +605,7 @@ Object(arg1: \"val1\" arg2: 2 arg3: true)
      *
      * @covers \GraphQL\Query::setSelectionSet
      * @covers \GraphQL\FieldTrait::constructSelectionSet
+     * @covers \GraphQL\Query::getSelectionSet
      *
      * @param Query $query
      *
@@ -554,6 +624,8 @@ field1
             'Query has improperly formatted selection set'
         );
 
+        $this->assertEquals(['field1'], $query->getSelectionSet());
+
         return $query;
     }
 
@@ -561,6 +633,7 @@ field1
      * @depends clone testEmptyQuery
      *
      * @covers \GraphQL\Query::setSelectionSet
+     * @covers \GraphQL\Query::getSelectionSet
      * @covers \GraphQL\FieldTrait::constructSelectionSet
      *
      * @param Query $query
@@ -580,6 +653,8 @@ field2
             (string) $query,
             'Query has improperly formatted selection set'
         );
+
+        $this->assertEquals(['field1', 'field2'], $query->getSelectionSet());
 
         return $query;
     }
@@ -626,6 +701,9 @@ field2
             'One level query not formatted correctly'
         );
 
+        $this->assertEquals(['field1', 'field2'], $query->getSelectionSet());
+        $this->assertEquals(['arg1' => 'val1', 'arg2' => 'val2'], $query->getArguments());
+
         return $query;
     }
 
@@ -634,6 +712,9 @@ field2
      *
      * @covers \GraphQL\FieldTrait::constructSelectionSet
      * @covers \GraphQL\Query::setAsNested
+     * @covers \GraphQL\Query::isNested
+     * @covers \GraphQL\Query::getSelectionSet
+     * @covers \GraphQL\Query::getFieldName
      *
      * @param Query $query
      *
@@ -655,6 +736,13 @@ field2
             'Nested query contains "query" word'
         );
 
+        $this->assertTrue($query->getSelectionSet()[2]->isNested());
+
+        $this->assertCount(3, $query->getSelectionSet());
+        $this->assertEquals('field1', $query->getSelectionSet()[0]);
+        $this->assertEquals('field2', $query->getSelectionSet()[1]);
+        $this->assertEquals('Object2', $query->getSelectionSet()[2]->getFieldName());
+
         return $query;
     }
 
@@ -662,6 +750,8 @@ field2
      * @depends clone testTwoLevelQueryDoesNotContainWordQuery
      *
      * @covers \GraphQL\Query::setAsNested
+     * @covers \GraphQL\Query::getSelectionSet
+     * @covers \GraphQL\Query::getFieldName
      *
      * @param Query $query
      *
@@ -690,6 +780,11 @@ field3
             (string) $query,
             'Two level query not formatted correctly'
         );
+
+        $this->assertCount(3, $query->getSelectionSet());
+        $this->assertEquals('field1', $query->getSelectionSet()[0]);
+        $this->assertEquals('field2', $query->getSelectionSet()[1]);
+        $this->assertEquals('Object2', $query->getSelectionSet()[2]->getFieldName());
 
         return $query;
     }
@@ -727,6 +822,10 @@ fragment_field2
 }',
             (string) $query
         );
+
+        $this->assertCount(2, $query->getSelectionSet());
+        $this->assertEquals('field1', $query->getSelectionSet()[0]);
+        $this->assertInstanceOf(InlineFragment::class, $query->getSelectionSet()[1]);
 
         return $query;
     }

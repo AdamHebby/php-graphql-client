@@ -43,6 +43,16 @@ class InlineFragment extends NestableObject
     }
 
     /**
+     * Get Type Name
+     *
+     * @return string
+     */
+    public function getTypeName(): string
+    {
+        return $this->typeName;
+    }
+
+    /**
      *
      */
     public function __toString()

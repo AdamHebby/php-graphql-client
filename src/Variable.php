@@ -48,6 +48,46 @@ class Variable
     }
 
     /**
+     * Get Variable name
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get Variable type
+     *
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * Is required?
+     *
+     * @return bool
+     */
+    public function isRequired(): bool
+    {
+        return $this->required;
+    }
+
+    /**
+     * Get Variable default value
+     *
+     * @return mixed
+     */
+    public function getDefaultValue(): mixed
+    {
+        return $this->defaultValue;
+    }
+
+    /**
      * @return string
      */
     public function __toString(): string

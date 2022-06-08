@@ -10,6 +10,25 @@ A GraphQL client written in PHP which provides very simple, yet powerful, query
 generator classes that make the process of interacting with a GraphQL server a
 very simple one.
 
+## FORK CHANGES
+ - Removed Client Functionality
+   - This is now purely a GraphQL Query Generator
+ - Public for class properties
+   - Query
+     - getOperationName
+     - getFieldName
+     - getAlias
+     - getArguments
+     - isNested
+     - getVariables
+   - Variable
+     - getName
+     - getType
+     - isRequired
+     - getDefaultValue
+   - InlineFragment
+     - getTypeName
+
 # Usage
 
 There are 3 primary ways to use this package to generate your GraphQL queries:
@@ -366,7 +385,7 @@ companies starting with a name prefix and returns the company with the
 # Constructing The Client
 
 A Client object can easily be instantiated by providing the GraphQL endpoint
-URL. 
+URL.
 
 The Client constructor also receives an optional "authorizationHeaders"
 array, which can be used to add authorization headers to all requests being sent
@@ -392,7 +411,7 @@ Example:
 $client = new Client(
     'http://api.graphql.com',
     [],
-    [ 
+    [
         'connect_timeout' => 5,
         'timeout' => 5,
         'headers' => [

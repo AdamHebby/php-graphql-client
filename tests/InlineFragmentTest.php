@@ -19,6 +19,7 @@ class InlineFragmentTest extends TestCase
      * @covers \GraphQL\InlineFragment::setSelectionSet
      * @covers \GraphQL\InlineFragment::constructSelectionSet
      * @covers \GraphQL\InlineFragment::__toString
+     * @covers \GraphQL\InlineFragment::getTypeName
      */
     public function testConvertToString()
     {
@@ -30,6 +31,7 @@ class InlineFragmentTest extends TestCase
             ]
         );
 
+        $this->assertEquals('Test', $fragment->getTypeName());
         $this->assertEquals(
             '... on Test {
 field1

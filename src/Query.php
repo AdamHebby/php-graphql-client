@@ -93,6 +93,66 @@ class Query extends NestableObject
     }
 
     /**
+     * Returns the name of the operation to be run on the server
+     *
+     * @return string
+     */
+    public function getOperationName(): string
+    {
+        return ltrim($this->operationName, ' ');
+    }
+
+    /**
+     * Gets the Field Name
+     *
+     * @return string
+     */
+    public function getFieldName(): string
+    {
+        return $this->fieldName;
+    }
+
+    /**
+     * Gets the alias of the query
+     *
+     * @return string
+     */
+    public function getAlias(): string
+    {
+        return $this->alias;
+    }
+
+    /**
+     * Gets the list of arguments to be used in the query
+     *
+     * @return array
+     */
+    public function getArguments(): array
+    {
+        return $this->arguments;
+    }
+
+    /**
+     * Is Nested?
+     *
+     * @return bool
+     */
+    public function isNested(): bool
+    {
+        return $this->isNested;
+    }
+
+    /**
+     * Gets the list of variables to be used in the query
+     *
+     * @return array
+     */
+    public function getVariables(): array
+    {
+        return $this->variables;
+    }
+
+    /**
      * @param string $alias
      *
      * @return Query
@@ -269,9 +329,6 @@ class Query extends NestableObject
         return sprintf($signatureFormat, static::OPERATION_TYPE, $this->operationName, $this->constructVariables());
     }
 
-    /**
-     *
-     */
     protected function setAsNested()
     {
         $this->isNested = true;
