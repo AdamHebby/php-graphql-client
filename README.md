@@ -1,9 +1,5 @@
 # PHP GraphQL Client
-![Build Status](https://github.com/mghoneimy/php-graphql-client/actions/workflows/php.yml/badge.svg)
-[![Total
-Downloads](https://poser.pugx.org/gmostafa/php-graphql-client/downloads)](https://packagist.org/packages/gmostafa/php-graphql-client)
-[![Latest Stable
-Version](https://poser.pugx.org/gmostafa/php-graphql-client/v/stable)](https://packagist.org/packages/gmostafa/php-graphql-client)
+![Build Status](https://github.com/adamhebby/php-graphql-client/actions/workflows/php.yml/badge.svg)
 [![License](https://poser.pugx.org/gmostafa/php-graphql-client/license)](https://packagist.org/packages/gmostafa/php-graphql-client)
 
 A GraphQL client written in PHP which provides very simple, yet powerful, query
@@ -48,7 +44,7 @@ There are 3 primary ways to use this package to generate your GraphQL queries:
 Run the following command to install the package using composer:
 
 ```
-$ composer require gmostafa/php-graphql-client
+$ composer require adamhebby/php-graphql-client
 ```
 
 # Object-to-Query-Mapper Extension
